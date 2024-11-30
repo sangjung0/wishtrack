@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors for Dark Mode -->
+    <color name="primary_blue">#7AB7FF</color> <!-- 주 색상 블루를 다크 모드에 맞게 밝게 조정 -->
+    <color name="primary_variant">#005DFF</color> <!-- 동일한 주 색상의 변형 (어두운 배경에서도 잘 보이도록 조정) -->
+    <color name="secondary_gray">#1E1E1E</color> <!-- 다크 모드 배경색 -->
+    <color name="secondary_variant">#2C2C2C</color> <!-- 다크 모드용 보조 배경색 -->
+
+    <!-- Text Colors for Dark Mode -->
+    <color name="text_primary">#E1E1E1</color> <!-- 기본 텍스트 색상 (밝은 회색) -->
+    <color name="text_secondary">#A3A3A3</color> <!-- 보조 텍스트 색상 (중간 회색) -->
+    <color name="text_on_primary">#1C1E21</color> <!-- 주 색상 위에 표시되는 텍스트 색상 (짙은 검정) -->
+
+    <!-- Background and Surface Colors for Dark Mode -->
+    <color name="background_white">#121212</color> <!-- 다크 모드 배경 색상 -->
+    <color name="surface_gray">#2C2C2C</color> <!-- 카드 및 표면 배경색 -->
+
+    <!-- Error Colors for Dark Mode -->
+    <color name="error_red">#FF6E6E</color> <!-- 다크 모드 오류 색상 -->
+</resources>
