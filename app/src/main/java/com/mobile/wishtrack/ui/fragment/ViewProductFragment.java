@@ -30,8 +30,7 @@ public class ViewProductFragment extends Fragment {
     private ProductSearchViewModel productSearchViewModel;
     private String productPageUrl;
 
-    public ViewProductFragment() {
-    }
+    public ViewProductFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,10 +84,10 @@ public class ViewProductFragment extends Fragment {
         if (product == null) return;
         productPageUrl = product.getLink();
         goToProductPage.setText(product.getMallName());
-        Glide.with(this).load(product.getImageUrl()).into(itemImage);
+        Glide.with(this).load(product.getImage()).into(itemImage);
         itemTitle.setText(product.getTitle());
-        itemLPrice.setText(String.valueOf(product.getLPrices().get(0)));
-        itemHPrice.setText(String.valueOf(product.getHPrices().get(0)));
+        itemLPrice.setText(String.valueOf(product.getLPrice()));
+        itemHPrice.setText(String.valueOf(product.getHPrice()));
         itemProductID.setText(String.valueOf(product.getId()));
     }
 }

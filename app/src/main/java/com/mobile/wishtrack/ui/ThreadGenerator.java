@@ -3,6 +3,9 @@ package com.mobile.wishtrack.ui;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import lombok.Getter;
+
+@Getter
 public class ThreadGenerator {
     private static boolean singleton = false;
 
@@ -19,14 +22,6 @@ public class ThreadGenerator {
 
         dbExecutor = Executors.newSingleThreadExecutor();
         networkExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    }
-
-    public ExecutorService getDbExecutor() {
-        return dbExecutor;
-    }
-
-    public ExecutorService getNetworkExecutor() {
-        return networkExecutor;
     }
 
     public void close() {

@@ -17,6 +17,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.mobile.wishtrack.R;
 import com.mobile.wishtrack.domain.model.Product;
+import com.mobile.wishtrack.ui.adapter.SearchListAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,20 +57,25 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
         this.productChangeRateChart = this.view.findViewById(R.id.productChangeRateChart);
     }
 
-    public void bind(Product product) {
+    public void bind(Product product, SearchListAdapter.OnClickListener onClickListener) {
         /* setData */
-        Glide.with(view.getContext()).load(product.getImageUrl()).into(this.productImage);
+        Glide.with(view.getContext()).load(product.getImage()).into(this.productImage);
         this.productTitle.setText(product.getTitle());
-        this.productPrice.setText(String.valueOf(product.getLPrices().get(0)));
+        this.productPrice.setText(String.valueOf(product.getLPrice()));
         this.productChangeRate.setText(String.valueOf(product.getChangeRate()));
         this.productChangeRate.setTextColor(product.getChangeRate() > 0 ? view.getResources().getColor(R.color.increase_price) : view.getResources().getColor(R.color.decrease_price));
         this.productChangeRateArrow.setImageResource(product.getChangeRate() > 0 ? R.drawable.baseline_keyboard_arrow_up_24 : R.drawable.baseline_keyboard_arrow_down_24);
         this.productChangeRateArrow.setColorFilter(product.getChangeRate() > 0 ? view.getResources().getColor(R.color.increase_price) : view.getResources().getColor(R.color.decrease_price));
         this.productCart.setImageResource(product.isWish() ? R.drawable.baseline_shopping_cart_24 : R.drawable.baseline_add_shopping_cart_24);
-        setupLineChart(product.getDates(), product.getLPrices(), product.getHPrices());
+        setupLineChart(product.getPrices());
+
+        /* event setting */
+        this.productImage.setOnClickListener(v -> onClickListener.onProductClick(product));
+        this.productTitle.setOnClickListener(v -> onClickListener.onProductClick(product));
+        this.productCart.setOnClickListener(v -> onClickListener.onCartClick(product));
     }
 
-    private void setupLineChart(List<Calendar> date, List<Integer> lPrice, List<Integer> hPrice) {
+    private void setupLineChart(List<Product.Price> prices) {
         // 1. 데이터 준비
         List<Entry> lowPriceEntries = new ArrayList<>();
         List<Entry> highPriceEntries = new ArrayList<>();
@@ -82,20 +88,22 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
         int xIndex = 0;
 
         // 현재 날짜 추가
-        lowPriceEntries.add(new Entry(xIndex, lPrice.get(0)));
-        highPriceEntries.add(new Entry(xIndex, hPrice.get(0)));
+        final Product.Price cntPrice = prices.get(0);
+        lowPriceEntries.add(new Entry(xIndex, cntPrice.getLPrice()));
+        highPriceEntries.add(new Entry(xIndex, cntPrice.getHPrice()));
         xDate.add(dateFormat.format(iterCalendar.getTime()));
 
         // X축 값 매핑
-        int prevLPrice = lPrice.get(0);
-        int prevHPrice = hPrice.get(0);
+        int prevLPrice = cntPrice.getLPrice();
+        int prevHPrice = cntPrice.getHPrice();
         iterCalendar.add(Calendar.WEEK_OF_MONTH, -1);
         xIndex++;
-        for (int i = 0; i < date.size(); i++) {
+        for (int i = 0; i < prices.size(); i++) {
             if (iterCalendar.before(sixMonthsAgo)) break;
-            Calendar iDate = date.get(i);
-            final int cntLPrice = lPrice.get(i);
-            final int cntHPrice = hPrice.get(i);
+            final Product.Price price = prices.get(i);
+            Calendar iDate = price.getDate();
+            final int cntLPrice = price.getLPrice();
+            final int cntHPrice = price.getHPrice();
 
             if (iDate.before(iterCalendar)){
                 lowPriceEntries.add(new Entry(xIndex, prevLPrice));

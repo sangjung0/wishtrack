@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.mobile.wishtrack.R;
 import com.mobile.wishtrack.domain.model.QueryOptions;
+import com.mobile.wishtrack.sharedData.constant.NaverParameterSort;
 import com.mobile.wishtrack.ui.viewModel.ProductSearchViewModel;
 
 public class CategoryDialog extends DialogFragment {
@@ -24,7 +25,7 @@ public class CategoryDialog extends DialogFragment {
     private RadioGroup sortOptions;
     private RadioButton sortByPriceASE, sortByPriceDESE, sortByRateASE, sortByRateDESE;
     private Button resetButton, applyButton;
-    private QueryOptions.Sort sortOption;
+    private NaverParameterSort sortOption;
 
     private ProductSearchViewModel productSearchViewModel;
 
@@ -55,13 +56,13 @@ public class CategoryDialog extends DialogFragment {
         /* event setting */
         sortOptions.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.sortByPriceASE) {
-                sortOption = QueryOptions.Sort.ASC;
+                sortOption = NaverParameterSort.ASC;
             } else if (checkedId == R.id.sortByPriceDESE) {
-                sortOption = QueryOptions.Sort.DSC;
+                sortOption = NaverParameterSort.DSC;
             } else if (checkedId == R.id.sortByRateASE) {
-                sortOption = QueryOptions.Sort.RASC;
+                sortOption = NaverParameterSort.RASC;
             } else if (checkedId == R.id.sortByRateDESE) {
-                sortOption = QueryOptions.Sort.RDSC;
+                sortOption = NaverParameterSort.RDSC;
             }
         });
 

@@ -24,7 +24,7 @@ public class VMProvider implements ViewModelProvider.Factory {
         final WishSearchManager wishSearchManager = application.getWishSearchManager();
 
         if (modelClass.isAssignableFrom(ProductSearchViewModel.class)) {
-            return (T) new ProductSearchViewModel(threadGenerator.getNetworkExecutor(), productSearchManager);
+            return (T) new ProductSearchViewModel(threadGenerator.getNetworkExecutor(), threadGenerator.getDbExecutor(), wishSearchManager, productSearchManager);
         }
         if (modelClass.isAssignableFrom(WishSearchViewModel.class)) {
             return (T) new WishSearchViewModel(threadGenerator.getDbExecutor(), wishSearchManager);

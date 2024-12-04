@@ -1,97 +1,104 @@
 package com.mobile.wishtrack.domain.model;
 
+import com.mobile.wishtrack.sharedData.constant.NaverProduct;
+import com.mobile.wishtrack.sharedData.constant.NaverProductType;
+
 import java.util.Calendar;
 import java.util.List;
 
-public class Product {
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter(AccessLevel.PRIVATE)
+@EqualsAndHashCode(callSuper = false)
+public class Product extends NaverProduct {
+
     private final int id;
-    private final String title;
-    private final String link;
-    private final String imageUrl;
-    private final List<Calendar> dates;
-    private final List<Integer> lPrices;
-    private final List<Integer> hPrices;
-    private final String mallName;
+    private final List<Price> prices;
     private final boolean isWish;
     private final float changeRate;
+
+    private Product(
+            int id,
+            List<Price> prices,
+            boolean isWish,
+            float changeRate,
+            String title,
+            String link,
+            String image,
+            int lPrice,
+            int hPrice,
+            String mallName,
+            int productId,
+            NaverProductType naverProductType,
+            String maker,
+            String brand,
+            String category1,
+            String category2,
+            String category3,
+            String category4
+    ) {
+        super(title, link, image, lPrice, hPrice, mallName, productId, naverProductType, maker, brand, category1, category2, category3, category4);
+        this.id = id;
+        this.prices = prices;
+        this.isWish = isWish;
+        this.changeRate = changeRate;
+    }
 
     public static Product newInstance(
             int id,
             String title,
             String link,
-            String imageUrl,
-            List<Calendar> dates,
-            List<Integer> lPrices,
-            List<Integer> hPrices,
+            String image,
+            int lPrice,
+            int hPrice,
             String mallName,
+            int productId,
+            NaverProductType naverProductType,
+            String maker,
+            String brand,
+            String category1,
+            String category2,
+            String category3,
+            String category4,
+            List<Price> prices,
             boolean isWish
     ) {
-        float changeRate = lPrices.size() == 1 ? 0 : (float) (lPrices.get(0) - lPrices.get(1)) / lPrices.get(1);
-        return new Product(id, title, link, imageUrl, dates, lPrices, hPrices, mallName, isWish, changeRate);
+        float changeRate = prices.size() == 1 ? 0 : (float) (prices.get(0).lPrice - prices.get(1).lPrice) / prices.get(1).lPrice;
+        return new Product(id, prices, isWish, changeRate, title, link, image, lPrice, hPrice, mallName, productId, naverProductType, maker, brand, category1, category2, category3, category4);
     }
 
-    private Product(
+    public static Product newInstance(
             int id,
             String title,
             String link,
-            String imageUrl,
-            List<Calendar> dates,
-            List<Integer> lPrices,
-            List<Integer> hPrices,
+            String image,
             String mallName,
-            boolean isWish,
-            float changeRate
-    ) {
-        this.id = id;
-        this.title = title;
-        this.link = link;
-        this.imageUrl = imageUrl;
-        this.dates = dates;
-        this.lPrices = lPrices;
-        this.hPrices = hPrices;
-        this.mallName = mallName;
-        this.isWish = isWish;
-        this.changeRate = changeRate;
+            int productId,
+            NaverProductType naverProductType,
+            String maker,
+            String brand,
+            String category1,
+            String category2,
+            String category3,
+            String category4,
+            List<Price> prices,
+            boolean isWish) {
+        final int lPrice = prices.isEmpty() ? 0 : prices.get(0).lPrice;
+        final int hPrice = prices.isEmpty() ? 0 : prices.get(0).hPrice;
+        return newInstance(id, title, link, image, lPrice, hPrice, mallName, productId, naverProductType, maker, brand, category1, category2, category3, category4, prices, isWish);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public List<Calendar> getDates() {
-        return dates;
-    }
-
-    public List<Integer> getLPrices() {
-        return lPrices;
-    }
-
-    public List<Integer> getHPrices() {
-        return hPrices;
-    }
-
-    public String getMallName() {
-        return mallName;
-    }
-
-    public boolean isWish() {
-        return isWish;
-    }
-
-    public float getChangeRate() {
-        return changeRate;
+    @AllArgsConstructor
+    @Getter
+    public static class Price {
+        private final Calendar date;
+        private final int lPrice;
+        private final int hPrice;
     }
 }
 

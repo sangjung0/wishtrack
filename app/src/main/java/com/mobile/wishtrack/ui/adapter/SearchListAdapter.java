@@ -13,7 +13,7 @@ import com.mobile.wishtrack.ui.customUi.SearchProductViewHolder;
 
 public class SearchListAdapter extends ListAdapter<Product, SearchProductViewHolder> {
     private final Context context;
-    private OnProductClickListener onProductClickListener;
+    private OnClickListener onClickListener;
 
     public SearchListAdapter(Context context) {
         super(new DiffUtil.ItemCallback<Product>(){
@@ -26,14 +26,14 @@ public class SearchListAdapter extends ListAdapter<Product, SearchProductViewHol
             @Override
             public boolean areContentsTheSame(@NonNull Product oldItem, @NonNull Product newItem) {
                 // 같은 내용인지 판별. 일단 내용 변경될 일이 없어서 id로 함
-                return oldItem.getId() == newItem.getId();
+                return oldItem.equals(newItem);
             }
         });
         this.context = context;
     }
 
-    public void setOnProductClickListener(OnProductClickListener onProductClickListener) {
-        this.onProductClickListener = onProductClickListener;
+    public void setOnProductClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     @NonNull
@@ -50,15 +50,13 @@ public class SearchListAdapter extends ListAdapter<Product, SearchProductViewHol
     @Override
     public void onBindViewHolder(@NonNull SearchProductViewHolder holder, int position) {
         Product product = getItem(position);
-        holder.bind(product);
-
-        holder.itemView.setOnClickListener(v -> {
-            onProductClickListener.onProductClick(product);
-        });
+        //TODO 혹시 몰라 여기다 만들었는데 구조상 onCreate에 넣는게 더 효율적임. 테스트 잘 되면 옮길 것
+        holder.bind(product, onClickListener);
     }
 
-    public interface OnProductClickListener {
+    public interface OnClickListener {
         void onProductClick(Product product);
+        void onCartClick(Product product);
     }
 }
 

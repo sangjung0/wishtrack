@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mobile.wishtrack.R;
+import com.mobile.wishtrack.domain.model.Product;
 import com.mobile.wishtrack.ui.adapter.SearchListAdapter;
 import com.mobile.wishtrack.ui.viewModel.SearchViewModel;
 
@@ -38,9 +39,18 @@ public abstract class SearchListFragment extends Fragment {
 
         searchViewModel.getProductList().observe(getViewLifecycleOwner(), adapter::submitList);
 
-        adapter.setOnProductClickListener((product)->{
-           searchViewModel.setProduct(product);
-           searchViewModel.setVisible(true);
+        adapter.setOnProductClickListener(new SearchListAdapter.OnClickListener(){
+            @Override
+            public void onCartClick(Product product) {
+                if (product.isWish()) searchViewModel.removeWish(product);
+                else searchViewModel.setWish(product);
+            }
+
+            @Override
+            public void onProductClick(Product product) {
+                searchViewModel.setProduct(product);
+                searchViewModel.setVisible(true);
+            }
         });
 
         return view;
