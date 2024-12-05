@@ -14,9 +14,9 @@ public class DBManagerImpl implements DBManager {
     private final PriceDao priceDao;
     private final ProductDao productDao;
 
-    public DBManagerImpl(PriceDao priceDao, ProductDao productDao) {
-        this.priceDao = priceDao;
+    public DBManagerImpl(ProductDao productDao, PriceDao priceDao) {
         this.productDao = productDao;
+        this.priceDao = priceDao;
     }
 
     @Override

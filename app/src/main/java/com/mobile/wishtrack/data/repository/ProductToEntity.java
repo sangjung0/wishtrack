@@ -4,8 +4,10 @@ import com.mobile.wishtrack.data.model.price.PriceEntity;
 import com.mobile.wishtrack.data.model.price.ProductWithPrices;
 import com.mobile.wishtrack.data.model.product.ProductEntity;
 import com.mobile.wishtrack.domain.model.Product;
+import com.mobile.wishtrack.sharedData.constant.NaverProduct;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -18,11 +20,11 @@ public class ProductToEntity {
                 product.getTitle(),
                 product.getLink(),
                 product.getImage(),
-                product.getLPrice(),
-                product.getHPrice(),
+                product.getLprice(),
+                product.getHprice(),
                 product.getMallName(),
                 product.getProductId(),
-                product.getNaverProductType(),
+                product.getProductType(),
                 product.getMaker(),
                 product.getBrand(),
                 product.getCategory1(),
@@ -41,8 +43,8 @@ public class ProductToEntity {
         }
 
         return new ProductWithPrices(
-            convert(product),
-            priceEntities
+                convert(product),
+                priceEntities
         );
     }
 
@@ -61,7 +63,7 @@ public class ProductToEntity {
                 productEntity.getImage(),
                 productEntity.getMallName(),
                 productEntity.getProductId(),
-                productEntity.getNaverProductType(),
+                productEntity.getProductType(),
                 productEntity.getMaker(),
                 productEntity.getBrand(),
                 productEntity.getCategory1(),
@@ -71,5 +73,38 @@ public class ProductToEntity {
                 prices,
                 true
         );
+    }
+
+    public static List<Product> convert(List<NaverProduct> naverProducts) {
+        List<Product> products = new ArrayList<>();
+
+        for (NaverProduct naverProduct : naverProducts) {
+            final List<Product.Price> price = new ArrayList<>();
+            final int lprice = naverProduct.getLprice();
+            final int hprice = naverProduct.getHprice();
+
+            price.add(new Product.Price(
+                    Calendar.getInstance(),lprice, hprice == 0 ? lprice : hprice
+            ));
+
+            products.add(Product.newInstance(
+                    naverProduct.getTitle(),
+                    naverProduct.getLink(),
+                    naverProduct.getImage(),
+                    naverProduct.getMallName(),
+                    naverProduct.getProductId(),
+                    naverProduct.getProductType(),
+                    naverProduct.getMaker(),
+                    naverProduct.getBrand(),
+                    naverProduct.getCategory1(),
+                    naverProduct.getCategory2(),
+                    naverProduct.getCategory3(),
+                    naverProduct.getCategory4(),
+                    price,
+                    false
+            ));
+        }
+
+        return products;
     }
 }

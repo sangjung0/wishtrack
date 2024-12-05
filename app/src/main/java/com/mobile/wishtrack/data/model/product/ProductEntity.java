@@ -10,16 +10,12 @@ import com.mobile.wishtrack.sharedData.constant.NaverProductType;
 
 import java.util.Calendar;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Entity(
         tableName = "product",
-        indices = @Index(value = "date", orders = Index.Order.DESC)
+        indices = @Index(value = "wishDate", orders = Index.Order.DESC)
 )
-@NoArgsConstructor
-@Data
 @EqualsAndHashCode(callSuper = false)
 public class ProductEntity extends NaverProduct {
 
@@ -28,17 +24,41 @@ public class ProductEntity extends NaverProduct {
     private Calendar wishDate;
 
     @Ignore
-    @Override
-    public int getHPrice() {
-        return super.getHPrice();
+    private int lPrice;
+
+    @Ignore
+    private int hPrice;
+
+    public int getId() {
+        return id;
+    }
+
+    public Calendar getWishDate(){
+        return wishDate;
+    }
+
+    public ProductEntity(
+            int id,
+            Calendar wishDate,
+            String title,
+            String link,
+            String image,
+            String mallName,
+            long productId,
+            NaverProductType productType,
+            String maker,
+            String brand,
+            String category1,
+            String category2,
+            String category3,
+            String category4
+    ) {
+        super(title, link, image, 0, 0, mallName, productId, productType, maker, brand, category1, category2, category3, category4);
+        this.id = id;
+        this.wishDate = wishDate;
     }
 
     @Ignore
-    @Override
-    public int getLPrice() {
-        return super.getLPrice();
-    }
-
     public ProductEntity(
             Calendar wishDate,
             String title,
@@ -47,8 +67,8 @@ public class ProductEntity extends NaverProduct {
             int lPrice,
             int hPrice,
             String mallName,
-            int productId,
-            NaverProductType naverProductType,
+            long productId,
+            NaverProductType productType,
             String maker,
             String brand,
             String category1,
@@ -56,10 +76,11 @@ public class ProductEntity extends NaverProduct {
             String category3,
             String category4
     ) {
-        super(title, link, image, lPrice, hPrice, mallName, productId, naverProductType, maker, brand, category1, category2, category3, category4);
+        super(title, link, image, lPrice, hPrice, mallName, productId, productType, maker, brand, category1, category2, category3, category4);
         this.wishDate = wishDate;
     }
 
+    @Ignore
     public ProductEntity(
             String title,
             String link,
@@ -67,8 +88,8 @@ public class ProductEntity extends NaverProduct {
             int lPrice,
             int hPrice,
             String mallName,
-            int productId,
-            NaverProductType naverProductType,
+            long productId,
+            NaverProductType productType,
             String maker,
             String brand,
             String category1,
@@ -76,6 +97,6 @@ public class ProductEntity extends NaverProduct {
             String category3,
             String category4
     ) {
-        this(Calendar.getInstance(), title, link, image, lPrice, hPrice, mallName, productId, naverProductType, maker, brand, category1, category2, category3, category4);
+        this(Calendar.getInstance(), title, link, image, lPrice, hPrice, mallName, productId, productType, maker, brand, category1, category2, category3, category4);
     }
 }

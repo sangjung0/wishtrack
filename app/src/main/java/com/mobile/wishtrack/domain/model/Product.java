@@ -17,13 +17,13 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = false)
 public class Product extends NaverProduct {
 
-    private final int id;
+    private final Integer id;
     private final List<Price> prices;
     private final boolean isWish;
     private final float changeRate;
 
     private Product(
-            int id,
+            Integer id,
             List<Price> prices,
             boolean isWish,
             float changeRate,
@@ -33,7 +33,7 @@ public class Product extends NaverProduct {
             int lPrice,
             int hPrice,
             String mallName,
-            int productId,
+            long productId,
             NaverProductType naverProductType,
             String maker,
             String brand,
@@ -50,14 +50,14 @@ public class Product extends NaverProduct {
     }
 
     public static Product newInstance(
-            int id,
+            Integer id,
             String title,
             String link,
             String image,
             int lPrice,
             int hPrice,
             String mallName,
-            int productId,
+            long productId,
             NaverProductType naverProductType,
             String maker,
             String brand,
@@ -73,12 +73,12 @@ public class Product extends NaverProduct {
     }
 
     public static Product newInstance(
-            int id,
+            Integer id,
             String title,
             String link,
             String image,
             String mallName,
-            int productId,
+            long productId,
             NaverProductType naverProductType,
             String maker,
             String brand,
@@ -87,10 +87,33 @@ public class Product extends NaverProduct {
             String category3,
             String category4,
             List<Price> prices,
-            boolean isWish) {
+            boolean isWish
+    ) {
         final int lPrice = prices.isEmpty() ? 0 : prices.get(0).lPrice;
         final int hPrice = prices.isEmpty() ? 0 : prices.get(0).hPrice;
         return newInstance(id, title, link, image, lPrice, hPrice, mallName, productId, naverProductType, maker, brand, category1, category2, category3, category4, prices, isWish);
+    }
+
+
+    public static Product newInstance(
+            String title,
+            String link,
+            String image,
+            String mallName,
+            long productId,
+            NaverProductType naverProductType,
+            String maker,
+            String brand,
+            String category1,
+            String category2,
+            String category3,
+            String category4,
+            List<Price> prices,
+            boolean isWish
+    ) {
+        final int lPrice = prices.isEmpty() ? 0 : prices.get(0).lPrice;
+        final int hPrice = prices.isEmpty() ? 0 : prices.get(0).hPrice;
+        return newInstance(null, title, link, image, lPrice, hPrice, mallName, productId, naverProductType, maker, brand, category1, category2, category3, category4, prices, isWish);
     }
 
     @AllArgsConstructor

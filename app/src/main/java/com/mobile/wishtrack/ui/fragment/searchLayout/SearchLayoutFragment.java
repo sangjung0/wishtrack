@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.mobile.wishtrack.R;
 import com.mobile.wishtrack.ui.dialog.CategoryDialog;
@@ -43,8 +44,12 @@ public abstract class SearchLayoutFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Log.d("SearchLayoutFragment", "onQueryTextSubmit: " + s);
-                searchViewModel.search(s);
+                Log.d("DEBUG", "onQueryTextSubmit: " + s);
+                searchViewModel.search(s, (msg)->{
+                    requireActivity().runOnUiThread(()->{
+                        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+                    });
+                });
                 return false;
             }
 

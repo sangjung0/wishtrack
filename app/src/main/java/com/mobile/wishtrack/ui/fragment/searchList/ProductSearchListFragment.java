@@ -13,7 +13,6 @@ public class ProductSearchListFragment extends SearchListFragment {
         return new ProductSearchListFragment();
     }
 
-
     @Override
     protected SearchViewModel getViewModel() {
         return new ViewModelProvider(requireActivity()).get(ProductSearchViewModel.class);

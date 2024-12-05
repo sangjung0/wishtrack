@@ -86,8 +86,8 @@ public class ViewProductFragment extends Fragment {
         goToProductPage.setText(product.getMallName());
         Glide.with(this).load(product.getImage()).into(itemImage);
         itemTitle.setText(product.getTitle());
-        itemLPrice.setText(String.valueOf(product.getLPrice()));
-        itemHPrice.setText(String.valueOf(product.getHPrice()));
+        itemLPrice.setText(String.valueOf(product.getLprice()));
+        itemHPrice.setText(String.valueOf(product.getHprice()));
         itemProductID.setText(String.valueOf(product.getId()));
     }
 }

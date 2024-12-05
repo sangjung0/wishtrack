@@ -1,6 +1,8 @@
 package com.mobile.wishtrack.ui.customUi;
 
 import android.graphics.Color;
+import android.text.Html;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.mobile.wishtrack.R;
 import com.mobile.wishtrack.domain.model.Product;
 import com.mobile.wishtrack.ui.adapter.SearchListAdapter;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,8 +31,6 @@ import java.util.Locale;
 public class SearchProductViewHolder extends RecyclerView.ViewHolder {
     private ImageView productImage;
     private TextView productTitle;
-    private ImageView star1, star2, star3, star4, star5;
-    private TextView starValue;
     private TextView productPrice;
     private TextView productChangeRate;
     private ImageView productChangeRateArrow;
@@ -44,12 +45,6 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
 
         this.productImage = this.view.findViewById(R.id.productImage);
         this.productTitle = this.view.findViewById(R.id.productTitle);
-        this.star1 = this.view.findViewById(R.id.star1);
-        this.star2 = this.view.findViewById(R.id.star2);
-        this.star3 = this.view.findViewById(R.id.star3);
-        this.star4 = this.view.findViewById(R.id.star4);
-        this.star5 = this.view.findViewById(R.id.star5);
-        this.starValue = this.view.findViewById(R.id.startValue);
         this.productPrice = this.view.findViewById(R.id.productPrice);
         this.productChangeRate = this.view.findViewById(R.id.productChangeRate);
         this.productChangeRateArrow = this.view.findViewById(R.id.productChangeRateArrow);
@@ -60,12 +55,37 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
     public void bind(Product product, SearchListAdapter.OnClickListener onClickListener) {
         /* setData */
         Glide.with(view.getContext()).load(product.getImage()).into(this.productImage);
-        this.productTitle.setText(product.getTitle());
-        this.productPrice.setText(String.valueOf(product.getLPrice()));
-        this.productChangeRate.setText(String.valueOf(product.getChangeRate()));
-        this.productChangeRate.setTextColor(product.getChangeRate() > 0 ? view.getResources().getColor(R.color.increase_price) : view.getResources().getColor(R.color.decrease_price));
-        this.productChangeRateArrow.setImageResource(product.getChangeRate() > 0 ? R.drawable.baseline_keyboard_arrow_up_24 : R.drawable.baseline_keyboard_arrow_down_24);
-        this.productChangeRateArrow.setColorFilter(product.getChangeRate() > 0 ? view.getResources().getColor(R.color.increase_price) : view.getResources().getColor(R.color.decrease_price));
+
+        String cleanTitle = product.getTitle().replaceAll("<[^>]*>", ""); // HTML 태그 제거
+        this.productTitle.setText(cleanTitle);
+
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+        String formattedPrice = "₩ " + numberFormat.format(product.getLprice());
+        this.productPrice.setText(formattedPrice);
+
+        int changeRate = (int) (product.getChangeRate() * 100);
+        String formattedChangeRate = String.format(Locale.getDefault(), "%d%%", changeRate);
+        this.productChangeRate.setText(formattedChangeRate);
+        this.productChangeRate.setTextColor(
+                changeRate > 0
+                        ? view.getResources().getColor(R.color.increase_price)
+                        : view.getResources().getColor(R.color.decrease_price)
+        );
+
+        if (changeRate == 0) {
+            this.productChangeRateArrow.setVisibility(View.GONE); // 0이면 숨김
+        } else {
+            this.productChangeRateArrow.setVisibility(View.VISIBLE); // 0이 아니면 보임
+            this.productChangeRateArrow.setImageResource(
+                    changeRate > 0 ? R.drawable.baseline_keyboard_arrow_up_24 : R.drawable.baseline_keyboard_arrow_down_24
+            );
+            this.productChangeRateArrow.setColorFilter(
+                    changeRate > 0
+                            ? view.getResources().getColor(R.color.increase_price)
+                            : view.getResources().getColor(R.color.decrease_price)
+            );
+        }
+
         this.productCart.setImageResource(product.isWish() ? R.drawable.baseline_shopping_cart_24 : R.drawable.baseline_add_shopping_cart_24);
         setupLineChart(product.getPrices());
 
@@ -104,12 +124,14 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
             Calendar iDate = price.getDate();
             final int cntLPrice = price.getLPrice();
             final int cntHPrice = price.getHPrice();
+            final boolean lastIter = i == prices.size() - 1;
 
-            if (iDate.before(iterCalendar)){
+            if (iDate.before(iterCalendar) || lastIter){
                 lowPriceEntries.add(new Entry(xIndex, prevLPrice));
                 highPriceEntries.add(new Entry(xIndex, prevHPrice));
                 xDate.add(dateFormat.format(iterCalendar.getTime()));
                 iterCalendar.add(Calendar.WEEK_OF_MONTH, -1);
+                if (lastIter) break;
                 i--; xIndex++;
             }
 
@@ -124,18 +146,18 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
         // lPrice (파란색 선)
         lowPriceDataSet.setColor(Color.BLUE);
         lowPriceDataSet.setCircleColor(Color.BLUE);
-        lowPriceDataSet.setCircleRadius(6f); // 포인트 크기
-        lowPriceDataSet.setLineWidth(2f); // 선 두께
-        lowPriceDataSet.setValueTextSize(10f); // 값 텍스트 크기
+        lowPriceDataSet.setCircleRadius(3f); // 포인트 크기
+        lowPriceDataSet.setLineWidth(1f); // 선 두께
+        lowPriceDataSet.setValueTextSize(6f); // 값 텍스트 크기
         lowPriceDataSet.setDrawFilled(true); // 영역 채우기 활성화
         lowPriceDataSet.setFillColor(Color.parseColor("#ADD8E6")); // 연한 파란색
 
         // hPrice (빨간색 선)
         highPriceDataSet.setColor(Color.RED);
         highPriceDataSet.setCircleColor(Color.RED);
-        highPriceDataSet.setCircleRadius(6f);
-        highPriceDataSet.setLineWidth(2f);
-        highPriceDataSet.setValueTextSize(10f);
+        highPriceDataSet.setCircleRadius(3f);
+        highPriceDataSet.setLineWidth(1f);
+        highPriceDataSet.setValueTextSize(6f);
 
         // 3. 데이터 적용
         LineData lineData = new LineData(lowPriceDataSet, highPriceDataSet);
@@ -145,11 +167,16 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
         XAxis xAxis = productChangeRateChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); // X축 위치 아래
         xAxis.setTextColor(Color.BLACK);
+        xAxis.setTextSize(6f);
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1); // 주 단위 간격
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
+                int index = (int) value;
+                if (index < 0 || index >= xDate.size()) {
+                    return "";
+                }
                 return xDate.get((int) value);
             }
         });
@@ -160,15 +187,20 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
 
         // 5. Y축 스타일 설정
         YAxis leftAxis = productChangeRateChart.getAxisLeft();
-        leftAxis.setTextColor(Color.BLACK);
-        leftAxis.setDrawGridLines(true);
+        leftAxis.setEnabled(false); // 왼쪽 Y축 비활성화
 
         YAxis rightAxis = productChangeRateChart.getAxisRight();
         rightAxis.setEnabled(false); // 오른쪽 Y축 비활성화
 
+        productChangeRateChart.setTouchEnabled(false);
+        productChangeRateChart.setDragEnabled(false);
+        productChangeRateChart.setScaleEnabled(false);
+
+        productChangeRateChart.getLegend().setEnabled(false);
+
         // 6. 기타 스타일 설정
         productChangeRateChart.setDrawGridBackground(false); // 배경 그리드 비활성화
-        productChangeRateChart.setNoDataText("No data available"); // 데이터가 없을 때 표시할 텍스트
+        productChangeRateChart.setNoDataText(""); // 데이터가 없을 때 표시할 텍스트
         productChangeRateChart.getDescription().setEnabled(false); // 설명 제거
         productChangeRateChart.animateX(1000); // X축 애니메이션
         productChangeRateChart.invalidate(); // Chart 갱신

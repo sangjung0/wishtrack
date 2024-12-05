@@ -8,9 +8,11 @@ import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class QueryOptions {
     private final int display;
@@ -28,8 +30,8 @@ public class QueryOptions {
     }
 
     public static QueryOptions newInstance(NaverParameterSort sort, int minPrice, int maxPrice, int minRate, int maxRate) {
-        final int display = 100;
-        final int start = 0;
+        final int display = 10;
+        final int start = 1;
         final String filter = "";
         final ArrayList<NaverParameterKind> exclude = new ArrayList<>();
         return new QueryOptions(display, start, sort, filter, exclude, minPrice, maxPrice, minRate, maxRate);

@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         /* ViewPager setting */
         FragmentAdapter fragmentAdapter = new FragmentAdapter(this);
-        fragmentAdapter.addFragment(ProductSearchLayoutFragment.newInstance());
         fragmentAdapter.addFragment(WishSearchLayoutFragment.newInstance());
+        fragmentAdapter.addFragment(ProductSearchLayoutFragment.newInstance());
         viewPager.setAdapter(fragmentAdapter);
 
         /* event setting */

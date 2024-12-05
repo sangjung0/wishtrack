@@ -11,6 +11,8 @@ import com.mobile.wishtrack.domain.model.Product;
 import com.mobile.wishtrack.ui.customUi.SearchProduct;
 import com.mobile.wishtrack.ui.customUi.SearchProductViewHolder;
 
+import java.util.Objects;
+
 public class SearchListAdapter extends ListAdapter<Product, SearchProductViewHolder> {
     private final Context context;
     private OnClickListener onClickListener;
@@ -20,7 +22,7 @@ public class SearchListAdapter extends ListAdapter<Product, SearchProductViewHol
             @Override
             public boolean areItemsTheSame(@NonNull Product oldItem, @NonNull Product newItem) {
                 // 같은 객체인지 판별
-                return oldItem.getId() == newItem.getId();
+                return Objects.equals(oldItem.getId(), newItem.getId());
             }
 
             @Override

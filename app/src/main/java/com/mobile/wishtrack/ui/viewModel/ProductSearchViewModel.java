@@ -1,7 +1,9 @@
 package com.mobile.wishtrack.ui.viewModel;
 
+import com.mobile.wishtrack.WHError;
 import com.mobile.wishtrack.domain.model.QueryStatement;
 import com.mobile.wishtrack.domain.model.Product;
+import com.mobile.wishtrack.sharedData.util.Consumer;
 import com.mobile.wishtrack.ui.repository.ProductSearchManager;
 import com.mobile.wishtrack.ui.repository.WishSearchManager;
 
@@ -10,35 +12,25 @@ import java.util.concurrent.ExecutorService;
 
 public class ProductSearchViewModel extends SearchViewModel {
     private final ProductSearchManager productSearchManager;
-    private final WishSearchManager wishSearchManager;
-
-    private final ExecutorService networkExecutor, dbExecutor;
-
+    private final ExecutorService networkExecutor;
 
     public ProductSearchViewModel(ExecutorService dbExecutor,ExecutorService networkExecutor, WishSearchManager wishSearchManager, ProductSearchManager productSearchManager) {
+        super(dbExecutor, wishSearchManager);
         this.networkExecutor = networkExecutor;
-        this.dbExecutor = dbExecutor;
-        this.wishSearchManager = wishSearchManager;
         this.productSearchManager = productSearchManager;
     }
 
     @Override
-    public void search(String query) {
+    public void search(String query, Consumer<String> errorHandler) {
         this.networkExecutor.execute(() -> {
-            final QueryStatement queryStatement = QueryStatement.newInstance(query, queryOptions);
-            final List<Product> products = productSearchManager.searchProduct(queryStatement);
-            productList.postValue(products);
+            try{
+                final QueryStatement queryStatement = QueryStatement.newInstance(query, queryOptions);
+                final List<Product> products = productSearchManager.searchProduct(queryStatement);
+                productList.postValue(products);
+            } catch (WHError e) {
+                errorHandler.accept(e.getMessage());
+            }
         });
-    }
-
-    @Override
-    protected ExecutorService getDBExecutor() {
-        return dbExecutor;
-    }
-
-    @Override
-    protected WishSearchManager getWishSearchManager() {
-        return wishSearchManager;
     }
 
     @Override

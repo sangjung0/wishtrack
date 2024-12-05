@@ -7,17 +7,32 @@ import com.mobile.wishtrack.data.model.product.ProductEntity;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
 public class ProductWithPrices {
+
+    public ProductWithPrices(ProductEntity product, List<PriceEntity> prices){
+        this.product = product;
+        this.prices = prices;
+    }
+
     @Embedded
     private ProductEntity product;
 
     @TypeConverters(ListDateConverter.class)
     private List<PriceEntity> prices;
+
+    public void setPrices(List<PriceEntity> prices) {
+        this.prices = prices;
+    }
+
+    public void setProduct(ProductEntity product) {
+        this.product = product;
+    }
+
+    public List<PriceEntity> getPrices() {
+        return prices;
+    }
+
+    public ProductEntity getProduct() {
+        return product;
+    }
 }
