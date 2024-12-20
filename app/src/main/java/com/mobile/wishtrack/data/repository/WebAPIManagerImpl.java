@@ -2,7 +2,6 @@ package com.mobile.wishtrack.data.repository;
 
 import android.util.Log;
 
-import com.mobile.wishtrack.Constants;
 import com.mobile.wishtrack.WHError;
 import com.mobile.wishtrack.data.model.Naver.NaverResponse;
 import com.mobile.wishtrack.data.webAPI.NaverAPIService;

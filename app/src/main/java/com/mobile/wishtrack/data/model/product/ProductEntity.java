@@ -14,12 +14,15 @@ import lombok.EqualsAndHashCode;
 
 @Entity(
         tableName = "product",
-        indices = @Index(value = "wishDate", orders = Index.Order.DESC)
+        indices = {
+                @Index(value = "wishDate", orders = Index.Order.DESC),
+                @Index(value = "productId")
+        }
 )
 @EqualsAndHashCode(callSuper = false)
 public class ProductEntity extends NaverProduct {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private Calendar wishDate;
 

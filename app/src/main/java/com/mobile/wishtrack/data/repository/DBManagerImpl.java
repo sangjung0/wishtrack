@@ -20,17 +20,44 @@ public class DBManagerImpl implements DBManager {
     }
 
     @Override
-    public void insert(Product product) {
+    public Integer getIdByProductId(long productId) {
+        return productDao.getIdByProductId(productId);
+    }
+
+    @Override
+    public void updatePrice(Product product) {
         final ProductWithPrices productWithPrices = ProductToEntity.convertToProductWithPrice(product);
-        productDao.insert(productWithPrices.getProduct());
-        for(PriceEntity priceEntity : productWithPrices.getPrices()) {
-            priceDao.insert(priceEntity);
+        PriceEntity lastPriceEntity = priceDao.getLatestPriceOfProduct(product.getId());
+        final List<PriceEntity> newPrices = new ArrayList<>();
+
+        for (PriceEntity priceEntity : productWithPrices.getPrices()) {
+            if (priceEntity.getDate().before(lastPriceEntity.getDate())) return;
+            newPrices.add(priceEntity);
+        }
+
+        for (PriceEntity priceEntity : newPrices){
+            if (lastPriceEntity.getHprice() == priceEntity.getHprice() && lastPriceEntity.getLprice() == priceEntity.getLprice()) continue;
+            priceEntity.setPid(product.getId());
+            priceDao.update(priceEntity);
+            lastPriceEntity = priceEntity;
         }
     }
 
     @Override
-    public void delete(Product product) {
-        productDao.delete(ProductToEntity.convert(product));
+    public int insert(Product product) {
+        final ProductWithPrices productWithPrices = ProductToEntity.convertToProductWithPrice(product);
+        final int productId = (int) productDao.insert(productWithPrices.getProduct());
+        for(PriceEntity priceEntity : productWithPrices.getPrices()) {
+            priceEntity.setPid(productId);
+            priceDao.insert(priceEntity);
+        }
+
+        return productId;
+    }
+
+    @Override
+    public void delete(int id) {
+        productDao.delete(id);
     }
 
     @Override
@@ -43,5 +70,15 @@ public class DBManagerImpl implements DBManager {
         }
 
         return products;
+    }
+
+    @Override
+    public Product selectById(int id) {
+        return ProductToEntity.convert(productDao.getProductWithPricesById(id));
+    }
+
+    @Deprecated
+    public Product selectByProductId(long productId) {
+        return ProductToEntity.convert(productDao.getProductWithPricesByProductId(productId));
     }
 }

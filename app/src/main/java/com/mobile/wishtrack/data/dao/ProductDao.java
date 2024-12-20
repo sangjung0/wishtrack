@@ -15,13 +15,19 @@ import java.util.List;
 public interface ProductDao {
 
     @Insert
-    void insert(ProductEntity productEntity);
+    long insert(ProductEntity productEntity);
 
     @Update
     void update(ProductEntity product);
 
     @Delete
     void delete(ProductEntity product);
+
+    @Query("DELETE FROM product WHERE id = :id")
+    void delete(int id);
+
+    @Query("SELECT id FROM Product WHERE ProductId = :productId LIMIT 1")
+    Integer getIdByProductId(long productId);
 
     @Query("SELECT * FROM Product ORDER BY wishDate DESC")
     List<ProductEntity> getAllProducts();
@@ -32,7 +38,7 @@ public interface ProductDao {
     @Query(
             "SELECT p.*, " +
                     "  '[' || GROUP_CONCAT(" +
-                    "      '{\"date\":' || pr.date || ',\"lPrice\":' || pr.lPrice || ',\"hPrice\":' || pr.hPrice || '}'" +
+                    "      '{\"pid\":' || pr.pid || ',\"date\":' || pr.date || ',\"lprice\":' || pr.lprice || ',\"hprice\":' || pr.hprice || '}'" +
                     "  ) || ']' AS prices " +
                     "FROM Product p " +
                     "LEFT JOIN Price pr ON p.id = pr.pid " +
@@ -42,11 +48,23 @@ public interface ProductDao {
     )
     ProductWithPrices getProductWithPricesById(int id);
 
+    @Query(
+            "SELECT p.*, " +
+                    "  '[' || GROUP_CONCAT(" +
+                    "      '{\"pid\":' || pr.pid || ',\"date\":' || pr.date || ',\"lprice\":' || pr.lprice || ',\"hprice\":' || pr.hprice || '}'" +
+                    "  ) || ']' AS prices " +
+                    "FROM Product p " +
+                    "LEFT JOIN Price pr ON p.id = pr.pid " +
+                    "WHERE p.productId = :productId " +
+                    "GROUP BY p.id " +
+                    "ORDER BY p.wishDate DESC"
+    )
+    ProductWithPrices getProductWithPricesByProductId(long productId);
 
     @Query(
             "SELECT p.*, " +
                     "  '[' || GROUP_CONCAT(" +
-                    "      '{\"date\":' || pr.date || ',\"lPrice\":' || pr.lPrice || ',\"hPrice\":' || pr.hPrice || '}'" +
+                    "      '{\"pid\":' || pr.pid || ',\"date\":' || pr.date || ',\"lprice\":' || pr.lprice || ',\"hprice\":' || pr.hprice || '}'" +
                     "  ) || ']' AS prices " +
                     "FROM Product p " +
                     "LEFT JOIN Price pr ON p.id = pr.pid " +

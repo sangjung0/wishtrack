@@ -53,7 +53,7 @@ public class ProductToEntity {
         final List<Product.Price> prices = new ArrayList<>();
 
         for (PriceEntity priceEntity : productWithPrices.getPrices()) {
-            prices.add(new Product.Price(priceEntity.getDate(), priceEntity.getLPrice(), priceEntity.getHPrice()));
+            prices.add(new Product.Price(priceEntity.getDate(), priceEntity.getLprice(), priceEntity.getHprice()));
         }
 
         return Product.newInstance(

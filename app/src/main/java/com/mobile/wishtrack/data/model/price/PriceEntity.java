@@ -27,21 +27,21 @@ public class PriceEntity {
 
     @NonNull
     private Calendar date;
-    private int lPrice;
-    private int hPrice;
+    private int lprice;
+    private int hprice;
 
-    public PriceEntity(int pid, @NonNull Calendar date, int lPrice, int hPrice) {
+    public PriceEntity(int pid, @NonNull Calendar date, int lprice, int hprice) {
         this.pid = pid;
         this.date = date;
-        this.lPrice = lPrice;
-        this.hPrice = hPrice;
+        this.lprice = lprice;
+        this.hprice = hprice;
     }
 
     @Ignore
-    public PriceEntity(@NonNull Calendar date, int lPrice, int hPrice) {
+    public PriceEntity(@NonNull Calendar date, int lprice, int hprice) {
         this.date = date;
-        this.lPrice = lPrice;
-        this.hPrice = hPrice;
+        this.lprice = lprice;
+        this.hprice = hprice;
     }
 
     public int getPid() {
@@ -52,12 +52,12 @@ public class PriceEntity {
         return date;
     }
 
-    public int getLPrice() {
-        return lPrice;
+    public int getLprice() {
+        return lprice;
     }
 
-    public int getHPrice() {
-        return hPrice;
+    public int getHprice() {
+        return hprice;
     }
 
     public void setPid(int pid) {
@@ -69,10 +69,10 @@ public class PriceEntity {
     }
 
     public void setLPrice(int lPrice) {
-        this.lPrice = lPrice;
+        this.lprice = lPrice;
     }
 
     public void setHPrice(int hPrice) {
-        this.hPrice = hPrice;
+        this.hprice = hPrice;
     }
 }

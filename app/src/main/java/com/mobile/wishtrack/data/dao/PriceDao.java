@@ -27,8 +27,11 @@ public interface PriceDao {
     List<PriceEntity> getPricesDESC();
 
     @Query("SELECT * FROM Price WHERE pId = :productId ORDER BY date DESC")
-    List<PriceEntity> getPricesForProductId(int productId);
+    List<PriceEntity> getPricesOfProductId(int productId);
+
+    @Query("SELECT * FROM Price WHERE pId = :productId ORDER BY date DESC LIMIT 1")
+    PriceEntity getLatestPriceOfProduct(int productId);
 
     @Query("SELECT * FROM Price WHERE pId = :productId AND date = :date")
-    PriceEntity getPriceForProductByDate(int productId, Calendar date);
+    PriceEntity getPriceOfProductByDate(int productId, Calendar date);
 }
