@@ -2,6 +2,9 @@ package com.mobile.wishtrack;
 
 import android.app.Application;
 
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.mobile.wishtrack.data.dao.PriceDao;
 import com.mobile.wishtrack.data.dao.ProductDao;
 import com.mobile.wishtrack.data.database.WTDatabase;
@@ -9,6 +12,8 @@ import com.mobile.wishtrack.data.repository.DBManagerImpl;
 import com.mobile.wishtrack.data.repository.WebAPIManagerImpl;
 import com.mobile.wishtrack.data.webAPI.NaverAPIService;
 import com.mobile.wishtrack.data.webAPI.RetrofitClient;
+import com.mobile.wishtrack.data.worker.PriceUpdateWorker;
+import com.mobile.wishtrack.data.worker.WorkerInitializer;
 import com.mobile.wishtrack.domain.repository.DBManager;
 import com.mobile.wishtrack.domain.repository.WebAPIManager;
 import com.mobile.wishtrack.domain.usecase.ProductSearchManagerImpl;
@@ -53,6 +58,14 @@ public class WHApplication extends Application {
 
         this.productSearchManager = new ProductSearchManagerImpl(webAPIManager, dbManager);
         this.wishSearchManager = new WishSearchManagerImpl(dbManager);
+
+        WorkerInitializer.schedulePriceUpdate(this);
+
+
+        OneTimeWorkRequest testWork = new OneTimeWorkRequest.Builder(PriceUpdateWorker.class)
+                .build();
+
+        WorkManager.getInstance(this).enqueue(testWork);
     }
 
 
