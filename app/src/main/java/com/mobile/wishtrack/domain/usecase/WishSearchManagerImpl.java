@@ -14,13 +14,13 @@ public class WishSearchManagerImpl implements WishSearchManager {
     }
 
     @Override
-    public void setWish(Product product) {
-        dbManager.insert(product);
+    public int setWish(Product product) {
+        return dbManager.insert(product);
     }
 
     @Override
-    public void removeWish(Product product) {
-        dbManager.delete(product);
+    public void removeWish(int id) {
+        dbManager.delete(id);
     }
 
     @Override

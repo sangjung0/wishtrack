@@ -13,14 +13,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter(AccessLevel.PRIVATE)
+@Setter
 @EqualsAndHashCode(callSuper = false)
 public class Product extends NaverProduct {
 
-    private final Integer id;
-    private final List<Price> prices;
-    private final boolean isWish;
-    private final float changeRate;
+    private Integer id;
+    private List<Price> prices;
+    private boolean isWish;
+    private float changeRate;
 
     private Product(
             Integer id,

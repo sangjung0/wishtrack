@@ -8,29 +8,28 @@ import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
-@EqualsAndHashCode
+//TODO 이거 구조가 이상해짐. 추후 싱글톤으로 변경하는게 좋을 듯
+@Data
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class QueryOptions {
-    private final int display;
-    private final int start;
-    private final NaverParameterSort sort;
-    private final String filter;
-    private final List<NaverParameterKind> exclude;
-    private final int minPrice;
-    private final int maxPrice;
-    private final int minRate;
-    private final int maxRate;
+    private int display;
+    private int start;
+    private NaverParameterSort sort;
+    private String filter;
+    private List<NaverParameterKind> exclude;
+    private int minPrice;
+    private int maxPrice;
+    private int minRate;
+    private int maxRate;
 
     public static QueryOptions newInstance() {
         return newInstance(NaverParameterSort.SIM, 0, 0, 0, 0);
     }
 
     public static QueryOptions newInstance(NaverParameterSort sort, int minPrice, int maxPrice, int minRate, int maxRate) {
-        final int display = 10;
+        final int display = 40;
         final int start = 1;
         final String filter = "";
         final ArrayList<NaverParameterKind> exclude = new ArrayList<>();
