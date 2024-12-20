@@ -45,11 +45,13 @@ public abstract class SearchLayoutFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 Log.d("DEBUG", "onQueryTextSubmit: " + s);
-                searchViewModel.search(s, (msg)->{
-                    requireActivity().runOnUiThread(()->{
-                        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
-                    });
-                });
+                searchViewModel.setQuery(s);
+                searchViewModel.search(
+                    ()->{},
+                    (msg)->requireActivity().runOnUiThread(()->
+                        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show()
+                    )
+                );
                 return false;
             }
 

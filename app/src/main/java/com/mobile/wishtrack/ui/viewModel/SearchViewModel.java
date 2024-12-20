@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import com.mobile.wishtrack.domain.model.Product;
 import com.mobile.wishtrack.domain.model.QueryOptions;
 import com.mobile.wishtrack.sharedData.util.Consumer;
+import com.mobile.wishtrack.sharedData.util.Function;
 import com.mobile.wishtrack.ui.repository.WishSearchManager;
 
 import java.util.List;
@@ -26,6 +27,10 @@ public abstract class SearchViewModel extends ViewModel {
     @Setter
     @Getter
     protected QueryOptions queryOptions;
+    @Setter
+    @Getter
+    protected String query;
+    protected boolean isEnd;
 
     protected SearchViewModel(ExecutorService dbExecutor, WishSearchManager wishSearchManager){
         this.dbExecutor = dbExecutor;
@@ -44,14 +49,18 @@ public abstract class SearchViewModel extends ViewModel {
     public LiveData<List<Product>> getProductList() {return productList;}
 
 
-    public void setWish(Product product) {
-        dbExecutor.execute(() -> wishSearchManager.setWish(product));
+    public void setWish(Product product, Consumer<Integer> callback) {
+        dbExecutor.execute(() -> {
+            int id = wishSearchManager.setWish(product);
+            callback.accept(id);
+        });
     }
 
-    public void removeWish(Product product) {
-        dbExecutor.execute(() -> wishSearchManager.removeWish(product));
+    public void removeWish(int id) {
+        dbExecutor.execute(() -> wishSearchManager.removeWish(id));
     }
 
     /* abstract */
-    public abstract void search(String query, Consumer<String> errorHandler);
+    public abstract void search(Function callback, Consumer<String> errorHandler);
+    public abstract void searchMore(Function callback, Consumer<String> errorHandler);
 }

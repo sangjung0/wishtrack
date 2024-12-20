@@ -21,7 +21,8 @@ public class ThreadGenerator {
     private ThreadGenerator() {
 
         dbExecutor = Executors.newSingleThreadExecutor();
-        networkExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+//        networkExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        networkExecutor = dbExecutor;
     }
 
     public void close() {

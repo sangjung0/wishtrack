@@ -1,10 +1,8 @@
 package com.mobile.wishtrack.sharedData.constant;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 @AllArgsConstructor
-@Getter
 public enum NaverProductType {
     GENERAL_COMPARE(1, "일반상품", "가격비교 상품"),
     GENERAL_UNMATCHED(2, "일반상품", "가격비교 비매칭 일반상품"),
@@ -30,5 +28,17 @@ public enum NaverProductType {
             }
         }
         throw new IllegalArgumentException("Invalid id: " + id);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

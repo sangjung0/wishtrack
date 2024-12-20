@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.mobile.wishtrack.domain.model.Product;
+import com.mobile.wishtrack.sharedData.util.Consumer;
 import com.mobile.wishtrack.ui.customUi.SearchProduct;
 import com.mobile.wishtrack.ui.customUi.SearchProductViewHolder;
 
@@ -58,7 +59,8 @@ public class SearchListAdapter extends ListAdapter<Product, SearchProductViewHol
 
     public interface OnClickListener {
         void onProductClick(Product product);
-        void onCartClick(Product product);
+        void onDelete(int id);
+        void onInsert(Product product, Consumer<Integer> callback);
     }
 }
 

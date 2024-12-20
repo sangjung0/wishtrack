@@ -1,7 +1,6 @@
 package com.mobile.wishtrack.ui.customUi;
 
 import android.graphics.Color;
-import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +24,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,6 +50,8 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
         this.productChangeRateArrow = this.view.findViewById(R.id.productChangeRateArrow);
         this.productCart = this.view.findViewById(R.id.productCart);
         this.productChangeRateChart = this.view.findViewById(R.id.productChangeRateChart);
+
+        productChangeRateChart.setNoDataText("");
     }
 
     public void bind(Product product, SearchListAdapter.OnClickListener onClickListener) {
@@ -87,12 +89,27 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
         }
 
         this.productCart.setImageResource(product.isWish() ? R.drawable.baseline_shopping_cart_24 : R.drawable.baseline_add_shopping_cart_24);
-        setupLineChart(product.getPrices());
+
+        if (product.isWish()) {
+            setupLineChart(product.getPrices());
+            productChangeRateChart.setVisibility(View.VISIBLE);
+        }
+        else productChangeRateChart.setVisibility(View.GONE);
 
         /* event setting */
         this.productImage.setOnClickListener(v -> onClickListener.onProductClick(product));
         this.productTitle.setOnClickListener(v -> onClickListener.onProductClick(product));
-        this.productCart.setOnClickListener(v -> onClickListener.onCartClick(product));
+        this.productCart.setOnClickListener(v -> {
+            //TODO 여기서 cart 이미지를 바꿔주는데, 이건 좀 별로라 생각 함.
+            if (product.isWish()) {
+                onClickListener.onDelete(product.getId());
+                this.productCart.setImageResource(R.drawable.baseline_add_shopping_cart_24);
+            }
+            else {
+                onClickListener.onInsert(product, product::setId);
+                this.productCart.setImageResource(R.drawable.baseline_shopping_cart_24);
+            }
+        });
     }
 
     private void setupLineChart(List<Product.Price> prices) {
@@ -139,6 +156,15 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
             prevHPrice = cntHPrice;
         }
 
+        Collections.reverse(xDate);
+        for (int i = 0, j = xDate.size()-1; i <= j; i++, j--){
+           Entry first = lowPriceEntries.get(i);
+           Entry second = lowPriceEntries.get(j);
+           float temp = first.getY();
+           first.setY(second.getY());
+           second.setY(temp);
+        }
+
         // 2. 데이터셋 생성
         LineDataSet lowPriceDataSet = new LineDataSet(lowPriceEntries, "Low Price");
         LineDataSet highPriceDataSet = new LineDataSet(highPriceEntries, "High Price");
@@ -177,7 +203,7 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
                 if (index < 0 || index >= xDate.size()) {
                     return "";
                 }
-                return xDate.get((int) value);
+                return xDate.get(index);
             }
         });
 
@@ -200,7 +226,6 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
 
         // 6. 기타 스타일 설정
         productChangeRateChart.setDrawGridBackground(false); // 배경 그리드 비활성화
-        productChangeRateChart.setNoDataText(""); // 데이터가 없을 때 표시할 텍스트
         productChangeRateChart.getDescription().setEnabled(false); // 설명 제거
         productChangeRateChart.animateX(1000); // X축 애니메이션
         productChangeRateChart.invalidate(); // Chart 갱신

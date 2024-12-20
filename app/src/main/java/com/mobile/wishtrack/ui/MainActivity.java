@@ -13,7 +13,7 @@ import com.mobile.wishtrack.R;
 import com.mobile.wishtrack.WHApplication;
 import com.mobile.wishtrack.ui.adapter.FragmentAdapter;
 import com.mobile.wishtrack.ui.fragment.searchLayout.ProductSearchLayoutFragment;
-import com.mobile.wishtrack.ui.fragment.searchLayout.WishSearchLayoutFragment;
+import com.mobile.wishtrack.ui.fragment.searchList.WishSearchListFragment;
 import com.mobile.wishtrack.ui.viewModel.ProductSearchViewModel;
 import com.mobile.wishtrack.ui.viewModel.WishSearchViewModel;
 import com.mobile.wishtrack.ui.viewModel.VMProvider;
@@ -45,22 +45,27 @@ public class MainActivity extends AppCompatActivity {
         wishSearchViewModel.getVisible().observe(this, visible -> {
             if (visible) {
                 viewItemFragment.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.GONE);
             } else {
                 viewItemFragment.setVisibility(View.GONE);
+                viewPager.setVisibility(View.VISIBLE);
             }
         });
 
         productSearchViewModel.getVisible().observe(this, visible -> {
-            if(visible) {
+            if (visible) {
                 viewItemFragment.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.GONE);
             } else {
                 viewItemFragment.setVisibility(View.GONE);
+                viewPager.setVisibility(View.VISIBLE);
             }
-        });
+       });
 
         /* ViewPager setting */
         FragmentAdapter fragmentAdapter = new FragmentAdapter(this);
-        fragmentAdapter.addFragment(WishSearchLayoutFragment.newInstance());
+        fragmentAdapter.addFragment(WishSearchListFragment.newInstance());
+//        fragmentAdapter.addFragment(WishSearchLayoutFragment.newInstance());
         fragmentAdapter.addFragment(ProductSearchLayoutFragment.newInstance());
         viewPager.setAdapter(fragmentAdapter);
 

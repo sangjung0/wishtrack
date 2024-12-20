@@ -51,7 +51,14 @@ public class WHApplication extends Application {
         this.webAPIManager = new WebAPIManagerImpl(naverAPIService);
         this.dbManager = new DBManagerImpl(productDao, priceDao);
 
-        this.productSearchManager = new ProductSearchManagerImpl(webAPIManager);
+        this.productSearchManager = new ProductSearchManagerImpl(webAPIManager, dbManager);
         this.wishSearchManager = new WishSearchManagerImpl(dbManager);
+    }
+
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        this.threadGenerator.close();
     }
 }
