@@ -15,10 +15,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
+import com.github.mikephil.charting.charts.LineChart;
 import com.mobile.wishtrack.R;
 import com.mobile.wishtrack.domain.model.Product;
+import com.mobile.wishtrack.ui.Chart;
 import com.mobile.wishtrack.ui.viewModel.ProductSearchViewModel;
 import com.mobile.wishtrack.ui.viewModel.WishSearchViewModel;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 
 public class ViewProductFragment extends Fragment {
@@ -28,6 +34,7 @@ public class ViewProductFragment extends Fragment {
     private TextView itemTitle, itemLPrice, itemHPrice, itemMaker, itemBrand, itemCategory, itemProductID, itemProductType;
     private WishSearchViewModel wishSearchViewModel;
     private ProductSearchViewModel productSearchViewModel;
+    private LineChart productChageRateChart;
     private String productPageUrl;
 
     public ViewProductFragment() {}
@@ -54,6 +61,10 @@ public class ViewProductFragment extends Fragment {
         itemCategory = view.findViewById(R.id.item_category);
         itemProductID = view.findViewById(R.id.item_product_id);
         itemProductType = view.findViewById(R.id.item_product_type);
+        productChageRateChart = view.findViewById(R.id.product_chage_rate_chart);
+
+        //TODO 임시 비활성화
+        itemProductType.setVisibility(View.GONE);
 
         /* event setting */
         backButton.setOnClickListener((v) -> {
@@ -82,12 +93,61 @@ public class ViewProductFragment extends Fragment {
 
     private void setProduct(Product product) {
         if (product == null) return;
+
         productPageUrl = product.getLink();
         goToProductPage.setText(product.getMallName());
-        Glide.with(this).load(product.getImage()).into(itemImage);
-        itemTitle.setText(product.getTitle());
-        itemLPrice.setText(String.valueOf(product.getLprice()));
-        itemHPrice.setText(String.valueOf(product.getHprice()));
-        itemProductID.setText(String.valueOf(product.getId()));
+
+        itemImage.post(() -> {
+            int imageViewHeight = itemImage.getHeight(); // ImageView의 높이 가져오기
+
+            Glide.with(this)
+                    .load(product.getImage())
+                    .override(Target.SIZE_ORIGINAL, imageViewHeight) // 원본 비율로 높이 맞춤
+                    .into(itemImage);
+        });
+
+        String cleanTitle = product.getTitle().replaceAll("<[^>]*>", "");
+        itemTitle.setText(cleanTitle);
+
+
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+        String formattedPrice = "₩ " + numberFormat.format(product.getLprice());
+        itemLPrice.setText(formattedPrice);
+
+        formattedPrice = "₩ " + numberFormat.format(product.getHprice());
+        itemHPrice.setText(formattedPrice);
+
+        String maker = product.getMaker();
+        String brand = product.getBrand();
+        String category = product.getCategory1();
+        String productID = "네이버 상품 코드: " + String.valueOf(product.getProductId());
+
+        if (maker != null && !maker.isEmpty()) {
+            maker = "메이커: " + maker;
+            itemMaker.setText(maker);
+            itemMaker.setVisibility(View.VISIBLE);
+        } else {
+            itemMaker.setVisibility(View.GONE);
+        }
+
+        if (brand != null && !brand.isEmpty()) {
+            brand = "브랜드: " + brand;
+            itemBrand.setText(brand);
+            itemBrand.setVisibility(View.VISIBLE);
+        } else {
+            itemBrand.setVisibility(View.GONE);
+        }
+
+        if (category != null && !category.isEmpty()) {
+            category = "카테고리: " + category;
+            itemCategory.setText(category);
+            itemCategory.setVisibility(View.VISIBLE);
+        } else {
+            itemCategory.setVisibility(View.GONE);
+        }
+
+        itemProductID.setText(productID);
+
+        Chart.setupLineChart(productChageRateChart,product.getPrices());
     }
 }

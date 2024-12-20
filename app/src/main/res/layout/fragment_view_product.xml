@@ -58,7 +58,6 @@
             android:id="@+id/item_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="centerCrop"
             android:src="@drawable/baseline_image_24"
             android:contentDescription="Product Image" />
 
@@ -108,6 +107,7 @@
 
         <!-- 가격 변동 그래프 -->
         <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/product_chage_rate_chart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
