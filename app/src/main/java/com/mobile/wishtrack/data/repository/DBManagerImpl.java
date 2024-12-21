@@ -8,6 +8,7 @@ import com.mobile.wishtrack.domain.model.Product;
 import com.mobile.wishtrack.domain.repository.DBManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DBManagerImpl implements DBManager {
@@ -38,7 +39,7 @@ public class DBManagerImpl implements DBManager {
         for (PriceEntity priceEntity : newPrices){
             if (lastPriceEntity.getHprice() == priceEntity.getHprice() && lastPriceEntity.getLprice() == priceEntity.getLprice()) continue;
             priceEntity.setPid(product.getId());
-            priceDao.update(priceEntity);
+            priceDao.insert(priceEntity);
             lastPriceEntity = priceEntity;
         }
     }
@@ -66,6 +67,10 @@ public class DBManagerImpl implements DBManager {
         final List<Product> products = new ArrayList<>();
 
         for (ProductWithPrices productWithPrice : productWithPrices) {
+            //TODO 현재 sql의 한계로 데이터를  한번에 불러올 때, 정렬된 상태로 불러오는 것이 불가능함. SQL 장점을 살리기 위해 이렇게 만들었는데.. 쓸모 없어짐
+            final List<PriceEntity> prices = productWithPrice.getPrices();
+            Collections.reverse(prices);
+
             products.add(ProductToEntity.convert(productWithPrice));
         }
 
@@ -74,11 +79,21 @@ public class DBManagerImpl implements DBManager {
 
     @Override
     public Product selectById(int id) {
-        return ProductToEntity.convert(productDao.getProductWithPricesById(id));
+        //TODO sql 정렬 문제 그대로
+        final ProductWithPrices productWithPrices = productDao.getProductWithPricesById(id);
+        final List<PriceEntity> prices = productWithPrices.getPrices();
+        Collections.reverse(prices);
+
+        return ProductToEntity.convert(productWithPrices);
     }
 
     @Deprecated
     public Product selectByProductId(long productId) {
-        return ProductToEntity.convert(productDao.getProductWithPricesByProductId(productId));
+        //TODO sql 정렬 문제 그대로
+        final ProductWithPrices productWithPrices = productDao.getProductWithPricesByProductId(productId);
+        final List<PriceEntity> prices = productWithPrices.getPrices();
+        Collections.reverse(prices);
+
+        return ProductToEntity.convert(productWithPrices);
     }
 }

@@ -23,6 +23,8 @@ public abstract class SearchViewModel extends ViewModel {
     private final MutableLiveData<Product> product = new MutableLiveData<>();
     private final MutableLiveData<Boolean> visible = new MutableLiveData<>();
     protected final MutableLiveData<List<Product>> productList = new MutableLiveData<>();
+    //TODO 임시 변수
+    protected final MutableLiveData<Boolean> searchEvent = new MutableLiveData<>();
 
     @Setter
     @Getter
@@ -47,6 +49,8 @@ public abstract class SearchViewModel extends ViewModel {
     public LiveData<Product> getProduct() {return product;}
     public LiveData<Boolean> getVisible() {return visible;}
     public LiveData<List<Product>> getProductList() {return productList;}
+    public LiveData<Boolean> getSearchEvent() {return searchEvent;}
+    public void doneSearchEvent() {searchEvent.postValue(false);}
 
 
     public void setWish(Product product, Consumer<Integer> callback) {

@@ -58,19 +58,20 @@ public class WHApplication extends Application {
 
         this.productSearchManager = new ProductSearchManagerImpl(webAPIManager, dbManager);
         this.wishSearchManager = new WishSearchManagerImpl(dbManager);
-
-        WorkerInitializer.schedulePriceUpdate(this);
-
-
-        OneTimeWorkRequest testWork = new OneTimeWorkRequest.Builder(PriceUpdateWorker.class)
-                .build();
-        WorkManager.getInstance(this).enqueue(testWork);
     }
-
 
     @Override
     public void onTerminate() {
         super.onTerminate();
         this.threadGenerator.close();
+    }
+
+    public void startWorker() {
+        WorkerInitializer.schedulePriceUpdate(this);
+
+        OneTimeWorkRequest testWork = new OneTimeWorkRequest
+                .Builder(PriceUpdateWorker.class)
+                .build();
+        WorkManager.getInstance(this).enqueue(testWork);
     }
 }

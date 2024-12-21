@@ -1,8 +1,11 @@
 package com.mobile.wishtrack.ui;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.ViewModelProvider;
@@ -102,5 +105,22 @@ public class MainActivity extends AppCompatActivity {
 
         /* init setting */
         viewPager.setCurrentItem(0);
+
+
+        /* permission and work */
+        if (Notification.checkAndRequestNotificationPermission(this)) {
+            ((WHApplication) getApplication()).startWorker();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101) {
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "알림 권한이 필요합니다. 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ public class Chart {
 
         Calendar iterCalendar = Calendar.getInstance();
         Calendar sixMonthsAgo = Calendar.getInstance();
-        sixMonthsAgo.add(Calendar.MONTH, -6);
+        sixMonthsAgo.add(Calendar.MONTH, -2);
         int xIndex = 0;
 
         // 현재 날짜 추가
@@ -65,11 +65,17 @@ public class Chart {
 
         Collections.reverse(xDate);
         for (int i = 0, j = xDate.size()-1; i <= j; i++, j--){
-            Entry first = lowPriceEntries.get(i);
-            Entry second = lowPriceEntries.get(j);
-            float temp = first.getY();
-            first.setY(second.getY());
-            second.setY(temp);
+            Entry firstL = lowPriceEntries.get(i);
+            Entry secondL = lowPriceEntries.get(j);
+            Entry firstH = highPriceEntries.get(i);
+            Entry secondH = highPriceEntries.get(j);
+
+            float tempL = firstL.getY();
+            float tempH = firstH.getY();
+            firstL.setY(secondL.getY());
+            firstH.setY(secondH.getY());
+            secondL.setY(tempL);
+            secondH.setY(tempH);
         }
 
         // 2. 데이터셋 생성
