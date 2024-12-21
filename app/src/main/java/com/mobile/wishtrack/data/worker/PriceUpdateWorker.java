@@ -117,20 +117,20 @@ public class PriceUpdateWorker extends Worker {
                     hprice = Math.max(lprice, hprice);
 
                     //TODO 테스트 코드
-                    lprice = lprice + (int)((Math.random() -0.5)*lprice/2);
-                    hprice = hprice + (int)((Math.random() -0.5)*lprice/2);
-                    if (lprice < 1000) lprice = 1000;
-                    if (hprice < lprice) hprice = lprice;
-
+//                    lprice = lprice + (int)((Math.random() -0.5)*lprice/2);
+//                    hprice = hprice + (int)((Math.random() -0.5)*lprice/2);
+//                    if (lprice < 1000) lprice = 1000;
+//                    if (hprice < lprice) hprice = lprice;
+//
                     if (lprice != price.getLprice() || hprice != price.getHprice()) {
                         //TODO 테스트 코드
-                        Calendar calendar = Calendar.getInstance();
-                        Random random = new Random();
-                        int randomDays = random.nextInt(56) + 7;
-                        calendar.add(Calendar.DAY_OF_YEAR, -randomDays);
-                        priceDao.insert(new PriceEntity(product.getId(), calendar, lprice, hprice));
+//                        Calendar calendar = Calendar.getInstance();
+//                        Random random = new Random();
+//                        int randomDays = random.nextInt(56) + 7;
+//                        calendar.add(Calendar.DAY_OF_YEAR, -randomDays);
+//                        priceDao.insert(new PriceEntity(product.getId(), calendar, lprice, hprice));
 
-//                        priceDao.insert(new PriceEntity(product.getId(), Calendar.getInstance(), lprice, hprice));
+                        priceDao.insert(new PriceEntity(product.getId(), Calendar.getInstance(), lprice, hprice));
 
                         naverProduct.setHprice(hprice);
                         naverProduct.setLprice(lprice);
