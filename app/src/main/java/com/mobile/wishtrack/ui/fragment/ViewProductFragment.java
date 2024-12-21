@@ -109,7 +109,6 @@ public class ViewProductFragment extends Fragment {
         String cleanTitle = product.getTitle().replaceAll("<[^>]*>", "");
         itemTitle.setText(cleanTitle);
 
-
         NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
         String formattedPrice = "₩ " + numberFormat.format(product.getLprice());
         itemLPrice.setText(formattedPrice);
@@ -148,6 +147,7 @@ public class ViewProductFragment extends Fragment {
 
         itemProductID.setText(productID);
 
-        Chart.setupLineChart(productChageRateChart,product.getPrices());
+        if (product.isWish()) Chart.setupLineChart(productChageRateChart,product.getPrices());
+        else productChageRateChart.setVisibility(View.GONE);
     }
 }

@@ -71,25 +71,26 @@ public class PriceUpdateWorker extends Worker {
             NaverProduct naverProduct = searchAndUpdate(productWithPrice.getProduct(), price);
             if (naverProduct != null) {
                 final int lpriceGap = naverProduct.getLprice() - price.getLprice();
+                final float priceChangeRate = (float) lpriceGap /price.getLprice();
                 final String cleanTitle = productWithPrice.getProduct().getTitle().replaceAll("<[^>]*>", "");
                 final int icon;
                 final String title;
                 final String text;
 
-                if (lpriceGap > 500){
+                if (priceChangeRate > 0.1){
                     icon = R.drawable.baseline_keyboard_double_arrow_up_24;
                     title = "\""+ cleanTitle + "\" 상품의 가격이 엄청 올랐어요!";
-                    text = lpriceGap + "원 상승!";
+                    text = lpriceGap + "원 급상승!";
                 }
-                else if (lpriceGap > 0) {
+                else if (priceChangeRate > 0) {
                     icon = R.drawable.baseline_keyboard_arrow_up_24;
                     title = "\""+cleanTitle + "\" 상품의 가격이 올랐어요!";
                     text = lpriceGap + "원 상승!";
                 }
-                else if (lpriceGap < -500) {
+                else if (priceChangeRate < -0.1) {
                     icon = R.drawable.baseline_keyboard_double_arrow_down_24;
                     title = "\""+cleanTitle + "\" 상품의 가격이 엄청 내려갔어요!";
-                    text = lpriceGap + "원 하락!";
+                    text = lpriceGap + "원 급하락!";
                 }
                 else {
                     icon = R.drawable.baseline_keyboard_arrow_down_24;
@@ -116,8 +117,8 @@ public class PriceUpdateWorker extends Worker {
                     hprice = Math.max(lprice, hprice);
 
                     //TODO 테스트 코드
-                    lprice = lprice + (int)((Math.random() -0.5)*1000);
-                    hprice = hprice + (int)((Math.random() -0.5)*1000);
+                    lprice = lprice + (int)((Math.random() -0.5)*lprice/2);
+                    hprice = hprice + (int)((Math.random() -0.5)*lprice/2);
                     if (lprice < 1000) lprice = 1000;
                     if (hprice < lprice) hprice = lprice;
 
