@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 상단 툴바 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="4dp">
+
+            <!-- 뒤로가기 버튼 -->
+            <ImageView
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_arrow_back_ios_24"
+                android:contentDescription="Back Button"/>
+
+            <!-- 빈 공간으로 우측 정렬 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <!-- 상품 페이지 바로가기 버튼 -->
+            <TextView
+                android:id="@+id/go_to_product_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="판매점 바로가기"
+                android:padding="8dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_arrow_forward_24"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- 상품 이미지 -->
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/baseline_image_24"
+            android:contentDescription="Product Image" />
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="16dp"
+           android:orientation="horizontal"
+           android:baselineAligned="true">
+
+           <!-- 상품 이름 -->
+           <TextView
+               android:id="@+id/item_title"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Product Name"
+               android:textSize="20sp"
+               android:textColor="@android:color/black"
+               android:textStyle="bold" />
+
+           <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:contentDescription="TODO"
+               android:src="@drawable/baseline_keyboard_arrow_up_24"/>
+
+       </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/item_l_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lowest Price: ₩24,000"
+            android:textSize="15sp"
+            android:textColor="@android:color/holo_red_dark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_h_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Highest Price: ₩30,000"
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textStyle="bold" />
+
+        <!-- 가격 변동 그래프 -->
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/product_chage_rate_chart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <!-- 기타 세부 정보 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/item_maker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Maker: Example Maker"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/item_brand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Brand: Example Brand"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/item_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category: Example Category"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/item_product_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product ID: 123456"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/item_product_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product Type: Regular"
+                android:textSize="14sp"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

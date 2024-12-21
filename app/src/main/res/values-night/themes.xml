@@ -1,7 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Wishtrack" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <!-- Base application theme for Dark Mode -->
+    <style name="Base.Theme.Wishtrack" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorSecondary">@color/secondary_gray</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        <item name="android:colorBackground">@color/background_white</item>
+        <item name="colorSurface">@color/surface_gray</item>
+        <item name="colorError">@color/error_red</item>
+
+        <!-- Text Appearance for Dark Mode -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:fontFamily">@font/suit_regular</item>
+    </style>
+
+    <style name="Theme.Wishtrack." parent="Base.Theme.Wishtrack">
+        <!-- Custom App Theme with additional attributes, if needed -->
     </style>
 </resources>

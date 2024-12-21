@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary Colors -->
+    <color name="primary_blue">#005DFF</color> <!-- 주요 색상으로 사용하는 토스 블루 -->
+    <color name="primary_variant">#003EAB</color> <!-- 주 색상의 변형 (더 어두운 블루) -->
+    <color name="secondary_gray">#F6F7FB</color> <!-- 배경 색상으로 자주 사용되는 밝은 회색 -->
+    <color name="secondary_variant">#E3E6EC</color> <!-- 더 어두운 회색으로 구분 요소에 사용 -->
+
+    <!-- Text Colors -->
+    <color name="text_primary">#1C1E21</color> <!-- 기본 텍스트 색상 (짙은 검정) -->
+    <color name="text_secondary">#4B4E53</color> <!-- 보조 텍스트 색상 (중간 회색) -->
+    <color name="text_on_primary">#FFFFFF</color> <!-- 주 색상 위에 표시되는 텍스트 색상 (흰색) -->
+
+    <!-- Background and Surface Colors -->
+    <color name="background_white">#FFFFFF</color> <!-- 기본 배경색 -->
+    <color name="surface_gray">#F0F2F5</color> <!-- 카드 및 표면 배경색 -->
+
+    <!-- Error Colors -->
+    <color name="error_red">#FF4D4F</color> <!-- 오류 표시 색상 (밝은 빨간색) -->
+
+    <color name="increase_price">#FF0000</color>
+    <color name="decrease_price">#0000FF</color>
 </resources>

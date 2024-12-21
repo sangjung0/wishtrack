@@ -40,4 +40,24 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    annotationProcessor(libs.androidx.room.compiler)
+
+    implementation(libs.mpandroidchart);
+
+    implementation(libs.glide);
+    annotationProcessor(libs.glide);
+
+    implementation(libs.lombok);
+    annotationProcessor(libs.lombok);
+
+    implementation(libs.gson);
+
+    implementation(libs.retrofit);
+    implementation(libs.retrofit.converter.gson);
+    implementation(libs.okhttp);
+
+    implementation(libs.worker);
 }
