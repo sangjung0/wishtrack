@@ -46,7 +46,7 @@ public class WebAPIManagerImpl implements WebAPIManager {
                 queryOptions.getStart(),
                 queryOptions.getSort().getDescription(),
                 queryOptions.getFilter(),
-                String.join(":", exclude)
+                exclude.toString()
         );
 
         try{

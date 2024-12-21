@@ -102,11 +102,16 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
             if (product.isWish()) {
                 onClickListener.onDelete(product.getId());
                 this.productCart.setImageResource(R.drawable.baseline_add_shopping_cart_24);
+                productChangeRateChart.setVisibility(View.GONE);
             }
             else {
                 onClickListener.onInsert(product, product::setId);
                 this.productCart.setImageResource(R.drawable.baseline_shopping_cart_24);
+                Chart.setupLineChart(productChangeRateChart, product.getPrices());
+                productChangeRateChart.setVisibility(View.VISIBLE);
             }
+
+            product.setWish(!product.isWish());
         });
     }
 }

@@ -64,7 +64,6 @@ public class WHApplication extends Application {
 
         OneTimeWorkRequest testWork = new OneTimeWorkRequest.Builder(PriceUpdateWorker.class)
                 .build();
-
         WorkManager.getInstance(this).enqueue(testWork);
     }
 

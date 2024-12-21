@@ -80,7 +80,7 @@ public class CategoryDialog extends DialogFragment {
 //            minRateInput.setText("");
 //            maxRateInput.setText("");
             sortOptions.clearCheck();
-            sortByPriceASE.setChecked(true);
+            sortBySim.setChecked(true);
         });
 
         applyButton.setOnClickListener(v -> {
