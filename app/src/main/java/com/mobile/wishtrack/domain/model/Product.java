@@ -5,16 +5,14 @@ import com.mobile.wishtrack.sharedData.constant.NaverProductType;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
 public class Product extends NaverProduct {
 
     private Integer id;
@@ -114,6 +112,19 @@ public class Product extends NaverProduct {
         final int lPrice = prices.isEmpty() ? 0 : prices.get(0).lPrice;
         final int hPrice = prices.isEmpty() ? 0 : prices.get(0).hPrice;
         return newInstance(null, title, link, image, lPrice, hPrice, mallName, productId, naverProductType, maker, brand, category1, category2, category3, category4, prices, isWish);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) && getProductId() == product.getProductId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @AllArgsConstructor

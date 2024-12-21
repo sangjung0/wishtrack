@@ -63,36 +63,8 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
         String formattedPrice = "₩ " + numberFormat.format(product.getLprice());
         this.productPrice.setText(formattedPrice);
 
-        int changeRate = (int) (product.getChangeRate() * 100);
-        String formattedChangeRate = String.format(Locale.getDefault(), "%d%%", changeRate);
-        this.productChangeRate.setText(formattedChangeRate);
-        this.productChangeRate.setTextColor(
-                changeRate > 0
-                        ? view.getResources().getColor(R.color.increase_price)
-                        : view.getResources().getColor(R.color.decrease_price)
-        );
-
-        if (changeRate == 0) {
-            this.productChangeRateArrow.setVisibility(View.GONE); // 0이면 숨김
-        } else {
-            this.productChangeRateArrow.setVisibility(View.VISIBLE); // 0이 아니면 보임
-            this.productChangeRateArrow.setImageResource(
-                    changeRate > 0 ? R.drawable.baseline_keyboard_arrow_up_24 : R.drawable.baseline_keyboard_arrow_down_24
-            );
-            this.productChangeRateArrow.setColorFilter(
-                    changeRate > 0
-                            ? view.getResources().getColor(R.color.increase_price)
-                            : view.getResources().getColor(R.color.decrease_price)
-            );
-        }
-
-        this.productCart.setImageResource(product.isWish() ? R.drawable.baseline_shopping_cart_24 : R.drawable.baseline_add_shopping_cart_24);
-
-        if (product.isWish()) {
-            Chart.setupLineChart(productChangeRateChart, product.getPrices());
-            productChangeRateChart.setVisibility(View.VISIBLE);
-        }
-        else productChangeRateChart.setVisibility(View.GONE);
+        if (product.isWish()) wishWidget(product);
+        else hideWishWidget();
 
         /* event setting */
         this.productImage.setOnClickListener(v -> onClickListener.onProductClick(product));
@@ -101,17 +73,45 @@ public class SearchProductViewHolder extends RecyclerView.ViewHolder {
             //TODO 여기서 cart 이미지를 바꿔주는데, 이건 좀 별로라 생각 함.
             if (product.isWish()) {
                 onClickListener.onDelete(product.getId());
-                this.productCart.setImageResource(R.drawable.baseline_add_shopping_cart_24);
-                productChangeRateChart.setVisibility(View.GONE);
+                hideWishWidget();
             }
             else {
                 onClickListener.onInsert(product, product::setId);
-                this.productCart.setImageResource(R.drawable.baseline_shopping_cart_24);
-                Chart.setupLineChart(productChangeRateChart, product.getPrices());
-                productChangeRateChart.setVisibility(View.VISIBLE);
+                wishWidget(product);
             }
 
             product.setWish(!product.isWish());
         });
+    }
+
+    private void wishWidget(Product product) {
+        this.productCart.setImageResource(R.drawable.baseline_shopping_cart_24);
+
+        int changeRate = (int) (product.getChangeRate() * 100);
+        String formattedChangeRate = String.format(Locale.getDefault(), "%d%%", changeRate);
+        this.productChangeRate.setVisibility(View.VISIBLE);
+        this.productChangeRate.setText(formattedChangeRate);
+
+        if (changeRate > 0) {
+            this.productChangeRate.setTextColor(view.getResources().getColor(R.color.increase_price));
+            this.productChangeRateArrow.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
+            this.productChangeRateArrow.setColorFilter(view.getResources().getColor(R.color.increase_price));
+        } else {
+            this.productChangeRate.setTextColor(view.getResources().getColor(R.color.decrease_price));
+            this.productChangeRateArrow.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+            this.productChangeRateArrow.setColorFilter(view.getResources().getColor(R.color.decrease_price));
+
+            if (changeRate == 0) this.productChangeRateArrow.setVisibility(View.GONE);
+        }
+
+        Chart.setupLineChart(productChangeRateChart, product.getPrices());
+        productChangeRateChart.setVisibility(View.VISIBLE);
+    }
+
+    private void hideWishWidget() {
+        this.productCart.setImageResource(R.drawable.baseline_add_shopping_cart_24);
+        this.productChangeRate.setVisibility(View.GONE);
+        this.productChangeRateArrow.setVisibility(View.GONE);
+        this.productChangeRateChart.setVisibility(View.GONE);
     }
 }

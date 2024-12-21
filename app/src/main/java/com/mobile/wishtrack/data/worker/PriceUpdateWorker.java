@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.mobile.wishtrack.R;
 import com.mobile.wishtrack.WHError;
 import com.mobile.wishtrack.data.dao.PriceDao;
 import com.mobile.wishtrack.data.dao.ProductDao;
@@ -19,12 +20,14 @@ import com.mobile.wishtrack.data.webAPI.NaverAPIService;
 import com.mobile.wishtrack.data.webAPI.RetrofitClient;
 import com.mobile.wishtrack.sharedData.constant.NaverParameterSort;
 import com.mobile.wishtrack.sharedData.constant.NaverProduct;
+import com.mobile.wishtrack.ui.Notification;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -33,12 +36,14 @@ public class PriceUpdateWorker extends Worker {
     private final ProductDao productDao;
     private final PriceDao priceDao;
     private final NaverAPIService naverAPIService;
+    private final Context context;
 
 
     public PriceUpdateWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
         WTDatabase wtDatabase = WTDatabase.getInstance(context);
+        this.context = context;
         productDao = wtDatabase.productDao();
         priceDao = wtDatabase.priceDao();
         naverAPIService = RetrofitClient.getNaverAPIService();
@@ -58,30 +63,83 @@ public class PriceUpdateWorker extends Worker {
     private void updateProductPrices() {
 
         List<ProductWithPrices> productWithPrices = productDao.getAllProductsWithPrices();
+        Notification.GroupMessage groupMessages = new Notification.GroupMessage(R.drawable.baseline_shopping_cart_24, "가격 변동 탐지!");
 
         for (ProductWithPrices productWithPrice : productWithPrices) {
-            ProductEntity product = productWithPrice.getProduct();
-            PriceEntity price = productWithPrice.getPrices().get(0);
+            List<PriceEntity> prices = productWithPrice.getPrices();
+            PriceEntity price = prices.get(prices.size()-1);
+            NaverProduct naverProduct = searchAndUpdate(productWithPrice.getProduct(), price);
+            if (naverProduct != null) {
+                final int lpriceGap = naverProduct.getLprice() - price.getLprice();
+                final String cleanTitle = productWithPrice.getProduct().getTitle().replaceAll("<[^>]*>", "");
+                final int icon;
+                final String title;
+                final String text;
 
-            String cleanTitle = product.getTitle().replaceAll("<[^>]*>", "");
-            for (int start = 1; start < 50; start += 10){
-                List<NaverProduct> result = search(cleanTitle, start, start + 10);
-                boolean flag = false;
-                for (NaverProduct naverProduct : result) {
-                   if (naverProduct.getProductId() == product.getProductId()) {
-                       flag = true;
-                       int lprice = naverProduct.getLprice();
-                       int hprice = naverProduct.getHprice();
-                       hprice = Math.max(lprice, hprice);
-                       if (lprice != price.getLprice() || hprice != price.getHprice()) {
-                           priceDao.insert(new PriceEntity(product.getId(), Calendar.getInstance(), lprice, hprice));
-                       }
-                       break;
-                   }
+                if (lpriceGap > 500){
+                    icon = R.drawable.baseline_keyboard_double_arrow_up_24;
+                    title = "\""+ cleanTitle + "\" 상품의 가격이 엄청 올랐어요!";
+                    text = lpriceGap + "원 상승!";
                 }
-                if (flag) break;
+                else if (lpriceGap > 0) {
+                    icon = R.drawable.baseline_keyboard_arrow_up_24;
+                    title = "\""+cleanTitle + "\" 상품의 가격이 올랐어요!";
+                    text = lpriceGap + "원 상승!";
+                }
+                else if (lpriceGap < -500) {
+                    icon = R.drawable.baseline_keyboard_double_arrow_down_24;
+                    title = "\""+cleanTitle + "\" 상품의 가격이 엄청 내려갔어요!";
+                    text = lpriceGap + "원 하락!";
+                }
+                else {
+                    icon = R.drawable.baseline_keyboard_arrow_down_24;
+                    title = "\""+cleanTitle + "\" 상품의 가격이 내려갔어요!";
+                    text = lpriceGap + "원 하락!";
+                }
+
+                groupMessages.addContent(icon, title, text);
             }
         }
+
+        Notification.sendGroupedNotifications(context, groupMessages);
+    }
+
+    private NaverProduct searchAndUpdate(ProductEntity product, PriceEntity price){
+        String cleanTitle = product.getTitle().replaceAll("<[^>]*>", "");
+
+        for (int start = 1; start < 50; start += 10){
+            List<NaverProduct> result = search(cleanTitle, start, start + 10);
+            for (NaverProduct naverProduct : result) {
+                if (naverProduct.getProductId() == product.getProductId()) {
+                    int lprice = naverProduct.getLprice();
+                    int hprice = naverProduct.getHprice();
+                    hprice = Math.max(lprice, hprice);
+
+                    //TODO 테스트 코드
+                    lprice = lprice + (int)((Math.random() -0.5)*1000);
+                    hprice = hprice + (int)((Math.random() -0.5)*1000);
+                    if (lprice < 1000) lprice = 1000;
+                    if (hprice < lprice) hprice = lprice;
+
+                    if (lprice != price.getLprice() || hprice != price.getHprice()) {
+                        //TODO 테스트 코드
+                        Calendar calendar = Calendar.getInstance();
+                        Random random = new Random();
+                        int randomDays = random.nextInt(56) + 7;
+                        calendar.add(Calendar.DAY_OF_YEAR, -randomDays);
+                        priceDao.insert(new PriceEntity(product.getId(), calendar, lprice, hprice));
+
+//                        priceDao.insert(new PriceEntity(product.getId(), Calendar.getInstance(), lprice, hprice));
+
+                        naverProduct.setHprice(hprice);
+                        naverProduct.setLprice(lprice);
+                        return naverProduct;
+                    }
+                    return null;
+                }
+            }
+        }
+        return null;
     }
 
     public List<NaverProduct> search(String title, int start, int display){

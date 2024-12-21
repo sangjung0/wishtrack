@@ -49,20 +49,27 @@ public abstract class SearchListFragment extends Fragment {
                 if (searchViewModel instanceof WishSearchViewModel) return;
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
+                int cntItem = adapter.getItemCount() - 1;
+                if (layoutManager != null && layoutManager.findLastVisibleItemPosition() == cntItem) {
+                    final int lastItem = cntItem;
                     searchViewModel.searchMore(
-                        ()->{},
+                        ()-> requireActivity().runOnUiThread(()->
+                            recyclerView.scrollToPosition(lastItem)
+                        ),
                         (msg)-> requireActivity().runOnUiThread(()->
                             Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show()
                         )
                     );
-                    Toast.makeText(context, "Loading more items...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        searchViewModel.getProductList().observe(getViewLifecycleOwner(), v -> {
-            adapter.submitList(v);
+        searchViewModel.getProductList().observe(getViewLifecycleOwner(), adapter::submitList);
+        searchViewModel.getSearchEvent().observe(getViewLifecycleOwner(), (b)->{
+            if (b) {
+                recyclerView.scrollToPosition(0);
+                searchViewModel.doneSearchEvent();
+            }
         });
 
         adapter.setOnProductClickListener(new SearchListAdapter.OnClickListener(){

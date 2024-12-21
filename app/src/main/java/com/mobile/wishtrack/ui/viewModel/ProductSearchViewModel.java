@@ -37,6 +37,7 @@ public class ProductSearchViewModel extends SearchViewModel {
                 if (products != null){
                     isEnd = false;
                     productList.postValue(products);
+                    searchEvent.postValue(true);
                 }else{
                     errorHandler.accept("검색 결과가 없습니다.");
                     isEnd = true;
